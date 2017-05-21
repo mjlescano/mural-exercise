@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image, StyleSheet, Text } from 'react-native'
 
-export default ({
+const Sticky = ({
   text,
   position,
   selected
@@ -21,14 +21,17 @@ export default ({
   )
 }
 
+Sticky.width = 180
+Sticky.height = 180
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
-    width: 180,
-    height: 180,
+    width: Sticky.width,
+    height: Sticky.height,
     overflow: 'visible',
     resizeMode: 'cover'
   },
@@ -49,3 +52,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent'
   }
 })
+
+export default Sticky
