@@ -1,9 +1,18 @@
+import shortid from 'shortid'
+
 const initialState = []
 
 const reducers = {
   ADD_STICKY: (state, action) => ([
     ...state,
-    action.payload
+    {
+      text: '',
+      selected: false,
+      editing: false,
+      ...action.payload,
+      id: shortid.generate(),
+      kind: 'sticky'
+    }
   ])
 }
 
