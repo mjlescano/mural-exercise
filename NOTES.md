@@ -23,17 +23,16 @@ The Redux state should look something like:
   items: [
     {
       id: 'some-random-string',
-      type: 'sticky',
+      kind: 'sticky',
       position: [0, 0],
-      text: 'Some example text'
+      text: 'Some example text',
+      selected: true,
+      editing: true
     },
     ...
-  ],
-  selected: [
-    'some-random-string'
   ]
 }
 ```
 
-* defining `type: 'sticky'` for when is going to be more than stickies
+* defining `kind: 'sticky'` for when is going to be more than stickies
 * the `position` is relative to the center of the mural (and screen) because I want the mural to not have boundaries.
