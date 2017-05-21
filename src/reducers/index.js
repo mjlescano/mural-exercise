@@ -1,14 +1,6 @@
-const initialState = {
-  items: []
-}
+import { combineReducers } from 'redux'
+import items from './items'
 
-const reducers = {
-}
-
-export default (state = initialState, action) => {
-  if (reducers[action.type]) {
-    return reducers[action.type](state, action)
-  } else {
-    return state
-  }
-}
+export default combineReducers({
+  items
+})
