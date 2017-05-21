@@ -13,7 +13,9 @@ export default ({
   ]
 
   return (
-    <Image source={require('../assets/sticky.png')} style={style}>
+    <Image
+      accessibilityTraits={selected && 'selected'}
+      source={require('../assets/sticky.png')} style={style}>
       <Text style={styles.text}>{text}</Text>
     </Image>
   )

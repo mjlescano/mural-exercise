@@ -1,41 +1,29 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, StyleSheet, StatusBar } from 'react-native'
+import { View, StyleSheet, StatusBar, Text } from 'react-native'
 import { addSticky } from '../actions'
 import { getStickies } from '../reducers'
 import Sticky from '../components/Sticky'
 
-export class Mural extends React.Component {
-  componentWillMount () {
-    this.props.dispatch(addSticky({
-      text: 'Una sticky de prueba',
-      position: [200, 110]
-    }))
-
-    this.props.dispatch(addSticky({
-      text: 'Otra sticky de prueba',
-      position: [-250, -255]
-    }))
-
-    this.props.dispatch(addSticky({
-      position: [-320, 70],
-      selected: true
-    }))
-  }
-
-  render () {
-    return (
-      <View style={styles.container}>
-        <StatusBar barStyle='dark-content' />
-        <View style={styles.itemsWrapper}>
-          {this.props.stickies.map((sticky) => (
-            <Sticky key={sticky.id} {...sticky} />
-          ))}
-        </View>
+export const Mural = ({
+  stickies
+}) => (
+  <View style={styles.container}>
+    <StatusBar barStyle='dark-content' />
+    <View style={styles.itemsWrapper}>
+      {stickies.map((sticky) => (
+        <Sticky key={sticky.id} {...sticky} />
+      ))}
+    </View>
+    {stickies.length === 0 && (
+      <View style={styles.addStickyMsgWrapper}>
+        <Text style={styles.addStickyMsg}>
+          Double tap to add a sticky note
+        </Text>
       </View>
-    )
-  }
-}
+    )}
+  </View>
+)
 
 const styles = StyleSheet.create({
   container: {
@@ -47,6 +35,18 @@ const styles = StyleSheet.create({
   itemsWrapper: {
     width: 0,
     height: 0
+  },
+  addStickyMsgWrapper: {
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 2,
+    borderColor: '#3E454D',
+    borderWidth: 1,
+    borderStyle: 'dashed'
+  },
+  addStickyMsg: {
+    fontSize: 12,
+    color: '#3E454D'
   }
 })
 
