@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { View, Image, StyleSheet, Text } from 'react-native'
+import { Image, StyleSheet, Text } from 'react-native'
 import Tapable from 'react-native-tapable'
 
 export default class Sticky extends PureComponent {

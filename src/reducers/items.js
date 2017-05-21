@@ -3,17 +3,21 @@ import shortid from 'shortid'
 const initialState = []
 
 const reducers = {
-  ADD_STICKY: (state, action) => ([
+  ADD_ITEM: (state, action) => ([
     ...state,
     {
+      kind: 'sticky',
       text: '',
       selected: false,
       editing: false,
       ...action.payload,
-      id: shortid.generate(),
-      kind: 'sticky'
+      id: shortid.generate()
     }
   ]),
+
+  REMOVE_ITEMS: (state, { ids }) => (
+    state.filter((item) => !ids.includes(item.id))
+  ),
 
   SELECT_ITEM: (state, { id }) => state.map((item) => {
     if (item.id === id) return { ...item, selected: true }

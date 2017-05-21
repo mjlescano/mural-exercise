@@ -1,6 +1,11 @@
-export const addSticky = (data) => ({
-  type: 'ADD_STICKY',
+export const addItem = (data) => ({
+  type: 'ADD_ITEM',
   payload: data
+})
+
+export const removeItems = (ids) => ({
+  type: 'REMOVE_ITEMS',
+  ids
 })
 
 export const selectItem = (id) => ({

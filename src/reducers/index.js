@@ -8,6 +8,9 @@ export default combineReducers({
 // It's weird to have a getter here, but for the complexity of the app,
 // there's no need to use something like https://github.com/reactjs/reselect
 // for now...
-export const getStickies = (state) => (
-  state.items.filter((item) => item.kind === 'sticky')
+
+export const getItems = (state) => state.items.slice()
+
+export const getSelectedItemsIds = (state) => (
+  state.items.filter((item) => item.selected).map((item) => item.id)
 )

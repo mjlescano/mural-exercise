@@ -2,9 +2,10 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { View, StyleSheet, StatusBar, Text, Dimensions } from 'react-native'
 import Tapable from 'react-native-tapable'
-import { addSticky, selectItem, unselectItem } from '../actions'
-import { getStickies } from '../reducers'
+import { addItem, removeItems, selectItem, unselectItem } from '../actions'
+import { getItems, getSelectedItemsIds } from '../reducers'
 import Sticky from '../components/Sticky'
+import ActionsMenu from '../components/ActionsMenu'
 
 export class Mural extends PureComponent {
   handleDoubleTap = (evt) => {
@@ -13,8 +14,9 @@ export class Mural extends PureComponent {
     const x = evt.pageX - (width / 2)
     const y = evt.pageY - (height / 2)
 
-    this.props.dispatch(addSticky({
-      position: [x, y]
+    this.props.dispatch(addItem({
+      position: [x, y],
+      kind: 'sticky'
     }))
   }
 
@@ -26,15 +28,19 @@ export class Mural extends PureComponent {
     this.props.dispatch(unselectItem(id))
   }
 
+  handleRemoveItems = () => {
+    this.props.dispatch(removeItems(this.props.selectedItemsIds))
+  }
+
   render () {
-    const { stickies } = this.props
+    const { items, selectedItemsIds } = this.props
 
     return (
       <Tapable onDoubleTap={this.handleDoubleTap} style={styles.wrapper}>
         <View style={styles.container}>
           <StatusBar barStyle='dark-content' />
           <View style={styles.itemsWrapper}>
-            {stickies.map((sticky) => (
+            {items.map((sticky) => (
               <Sticky
                 key={sticky.id}
                 {...sticky}
@@ -42,12 +48,15 @@ export class Mural extends PureComponent {
                 onUnselect={this.handleStickyUnselect} />
             ))}
           </View>
-          {stickies.length === 0 && (
+          {items.length === 0 && (
             <View style={styles.addStickyMsgWrapper}>
               <Text style={styles.addStickyMsg}>
                 Double tap to add a sticky note
               </Text>
             </View>
+          )}
+          {selectedItemsIds.length > 0 && (
+            <ActionsMenu onRemove={this.handleRemoveItems} />
           )}
         </View>
       </Tapable>
@@ -61,9 +70,9 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#F4F4F4',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    backgroundColor: '#F4F4F4'
   },
   itemsWrapper: {
     width: 0,
@@ -84,5 +93,6 @@ const styles = StyleSheet.create({
 })
 
 export default connect((state) => ({
-  stickies: getStickies(state)
+  items: getItems(state),
+  selectedItemsIds: getSelectedItemsIds(state)
 }))(Mural)
