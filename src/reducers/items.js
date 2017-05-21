@@ -19,6 +19,17 @@ const reducers = {
     state.filter((item) => !ids.includes(item.id))
   ),
 
+  EDIT_ITEM: (state, { id }) => state.map((item) => {
+    if (item.id === id) return { ...item, editing: true }
+    if (!item.editing) return item
+    return { ...item, editing: false }
+  }),
+
+  UNEDIT_ITEM: (state, { id }) => state.map((item) => {
+    if (item.id === id) return { ...item, selected: false }
+    return item
+  }),
+
   SELECT_ITEM: (state, { id }) => state.map((item) => {
     if (item.id === id) return { ...item, selected: true }
     if (!item.selected) return item
@@ -27,6 +38,11 @@ const reducers = {
 
   UNSELECT_ITEM: (state, { id }) => state.map((item) => {
     if (item.id === id) return { ...item, selected: false }
+    return item
+  }),
+
+  UPDATE_ITEM_TEXT: (state, { id, text }) => state.map((item) => {
+    if (item.id === id) return { ...item, text }
     return item
   })
 }
