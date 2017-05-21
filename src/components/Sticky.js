@@ -1,46 +1,82 @@
-import React from 'react'
-import { Image, StyleSheet, Text } from 'react-native'
+import React, { PureComponent } from 'react'
+import { View, Image, StyleSheet, Text } from 'react-native'
+import Tapable from 'react-native-tapable'
 
-const Sticky = ({
-  text,
-  position,
-  selected
-}) => {
-  const style = [
-    selected ? styles.selectedShadow : styles.defaultShadow,
-    { left: position[0], top: position[1] },
-    styles.container
-  ]
+export default class Sticky extends PureComponent {
+  static width = 180
+  static height = 180
 
-  return (
-    <Image
-      accessibilityTraits={selected && 'selected'}
-      source={require('../assets/sticky.png')} style={style}>
-      <Text style={styles.text}>{text}</Text>
-    </Image>
-  )
+  handleTap = (evt) => {
+    const {
+      id,
+      selected,
+      onSelect,
+      onUnselect
+    } = this.props
+
+    selected ? onUnselect(id) : onSelect(id)
+  }
+
+  render () {
+    const {
+      text,
+      position,
+      selected
+    } = this.props
+
+    const wrapperStyle = [
+      styles.wrapper,
+      {
+        left: position[0] - Sticky.width / 2,
+        top: position[1] - Sticky.height / 2
+      },
+      selected && styles.wrapperSelected
+    ]
+
+    const containerStyle = [
+      styles.container,
+      selected && styles.containerSelected
+    ]
+
+    return (
+      <Tapable
+        accessibilityTraits={selected && 'selected'}
+        onTap={this.handleTap}
+        style={wrapperStyle}>
+        <Image
+          style={containerStyle}
+          source={require('../assets/sticky.png')}>
+          <Text style={styles.text}>{text}</Text>
+        </Image>
+      </Tapable>
+    )
+  }
 }
 
-Sticky.width = 180
-Sticky.height = 180
-
 const styles = StyleSheet.create({
+  wrapper: {
+    position: 'absolute',
+    width: Sticky.width,
+    height: Sticky.height
+  },
+  wrapperSelected: {
+    transform: [
+      { scale: 1.07 }
+    ]
+  },
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    position: 'absolute',
     width: Sticky.width,
     height: Sticky.height,
+    resizeMode: 'cover',
     overflow: 'visible',
-    resizeMode: 'cover'
-  },
-  defaultShadow: {
     shadowOpacity: 0.18,
     shadowRadius: 1.4,
     shadowOffset: { height: 2 }
   },
-  selectedShadow: {
+  containerSelected: {
     shadowOpacity: 0.24,
     shadowRadius: 3.2,
     shadowOffset: { height: 4 }
@@ -52,5 +88,3 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent'
   }
 })
-
-export default Sticky

@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { View, StyleSheet, StatusBar, Text, Dimensions } from 'react-native'
 import Tapable from 'react-native-tapable'
-import { addSticky } from '../actions'
+import { addSticky, selectItem, unselectItem } from '../actions'
 import { getStickies } from '../reducers'
 import Sticky from '../components/Sticky'
 
@@ -10,12 +10,20 @@ export class Mural extends PureComponent {
   handleDoubleTap = (evt) => {
     const { width, height } = Dimensions.get('window')
 
-    const x = evt.pageX - (width / 2) - (Sticky.width / 2)
-    const y = evt.pageY - (height / 2) - (Sticky.height / 2)
+    const x = evt.pageX - (width / 2)
+    const y = evt.pageY - (height / 2)
 
     this.props.dispatch(addSticky({
       position: [x, y]
     }))
+  }
+
+  handleStickySelect = (id) => {
+    this.props.dispatch(selectItem(id))
+  }
+
+  handleStickyUnselect = (id) => {
+    this.props.dispatch(unselectItem(id))
   }
 
   render () {
@@ -27,7 +35,11 @@ export class Mural extends PureComponent {
           <StatusBar barStyle='dark-content' />
           <View style={styles.itemsWrapper}>
             {stickies.map((sticky) => (
-              <Sticky key={sticky.id} {...sticky} />
+              <Sticky
+                key={sticky.id}
+                {...sticky}
+                onSelect={this.handleStickySelect}
+                onUnselect={this.handleStickyUnselect} />
             ))}
           </View>
           {stickies.length === 0 && (

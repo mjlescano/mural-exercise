@@ -13,7 +13,18 @@ const reducers = {
       id: shortid.generate(),
       kind: 'sticky'
     }
-  ])
+  ]),
+
+  SELECT_ITEM: (state, { id }) => state.map((item) => {
+    if (item.id === id) return { ...item, selected: true }
+    if (!item.selected) return item
+    return { ...item, selected: false }
+  }),
+
+  UNSELECT_ITEM: (state, { id }) => state.map((item) => {
+    if (item.id === id) return { ...item, selected: false }
+    return item
+  })
 }
 
 export default (state = initialState, action) => {
