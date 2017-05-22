@@ -9,7 +9,8 @@ import {
   selectItem,
   unselectItem,
   updateItemText,
-  unselectAllItems
+  unselectAllItems,
+  duplicateItem
 } from '../actions'
 import { getItems, getSelectedItemId } from '../reducers'
 import Sticky from '../components/Sticky'
@@ -52,6 +53,10 @@ export class Mural extends PureComponent {
     this.props.dispatch(removeItem(id))
   }
 
+  handleDuplicateItem = (id) => {
+    this.props.dispatch(duplicateItem(id))
+  }
+
   render () {
     const { items, selectedItemId } = this.props
 
@@ -83,6 +88,7 @@ export class Mural extends PureComponent {
           {selectedItemId && (
             <ActionsMenu
               onEdit={() => this.handleEditItem(selectedItemId)}
+              onDuplicate={() => this.handleDuplicateItem(selectedItemId)}
               onRemove={() => this.handleRemoveItem(selectedItemId)} />
           )}
         </View>

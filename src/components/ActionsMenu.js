@@ -9,21 +9,28 @@ import {
 
 export default ({
   onEdit,
-  onRemove
+  onRemove,
+  onDuplicate
 }) => (
   <View
     style={[styles.container, { width: Dimensions.get('window').width }]}>
     {onEdit && (
       <ActionButton
         onPress={onEdit}
-        accessibilityLabel='Edit selected items'
+        accessibilityLabel='Edit selected item'
         icon={require('../assets/edit.png')} />
     )}
     {onRemove && (
       <ActionButton
         onPress={onRemove}
-        accessibilityLabel='Delete selected items'
+        accessibilityLabel='Delete selected item'
         icon={require('../assets/remove.png')} />
+    )}
+    {onDuplicate && (
+      <ActionButton
+        onPress={onDuplicate}
+        accessibilityLabel='Duplicate selected item'
+        icon={require('../assets/duplicate.png')} />
     )}
   </View>
 )

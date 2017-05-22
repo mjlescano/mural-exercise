@@ -60,9 +60,10 @@ const reducers = {
 
     items.push({
       ...original,
+      id: shortid.generate(),
       position: original.position.map((pos) => pos - 30),
       selected: true,
-      editing: true
+      editing: false
     })
 
     return items
