@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { View, StyleSheet, StatusBar, Text, Dimensions } from 'react-native'
@@ -8,58 +8,51 @@ import { getItems, getSelectedItemId } from '../reducers'
 import Sticky from '../components/Sticky'
 import ActionsMenu from '../components/ActionsMenu'
 
-export class Mural extends PureComponent {
-  handleDoubleTap = (evt) => {
-    const { width, height } = Dimensions.get('window')
-
-    const x = evt.pageX - (width / 2)
-    const y = evt.pageY - (height / 2)
-
-    this.props.addItem({
-      position: [x, y],
-      kind: 'sticky'
-    })
-  }
-
-  render () {
-    const { items, selectedItemId } = this.props
-
-    return (
-      <Tapable
-        onTap={this.props.unselectAllItems}
-        onDoubleTap={this.handleDoubleTap}
-        style={styles.wrapper}>
-        <View style={styles.container}>
-          <StatusBar barStyle='dark-content' />
-          <View style={styles.itemsWrapper}>
-            {items.map((sticky) => (
-              <Sticky
-                key={sticky.id}
-                {...sticky}
-                onSelect={this.props.selectItem}
-                onEdit={this.props.editItem}
-                onUnselect={this.props.unselectItem}
-                onUpdateText={this.props.updateItemText} />
-            ))}
-          </View>
-          {items.length === 0 && (
-            <View style={styles.addStickyMsgWrapper}>
-              <Text style={styles.addStickyMsg}>
-                Double tap to add a sticky note
-              </Text>
-            </View>
-          )}
-          {selectedItemId && (
-            <ActionsMenu
-              onEdit={() => this.props.editItem(selectedItemId)}
-              onDuplicate={() => this.props.duplicateItem(selectedItemId)}
-              onRemove={() => this.props.removeItem(selectedItemId)} />
-          )}
+const Mural = ({
+  items,
+  selectedItemId,
+  unselectAllItems,
+  addItemOnPosition,
+  selectItem,
+  editItem,
+  unselectItem,
+  updateItemText,
+  duplicateItem,
+  removeItem
+}) => (
+  <Tapable
+    onTap={unselectAllItems}
+    onDoubleTap={addItemOnPosition}
+    style={styles.wrapper}>
+    <View style={styles.container}>
+      <StatusBar barStyle='dark-content' />
+      <View style={styles.itemsWrapper}>
+        {items.map((sticky) => (
+          <Sticky
+            key={sticky.id}
+            {...sticky}
+            onSelect={selectItem}
+            onEdit={editItem}
+            onUnselect={unselectItem}
+            onUpdateText={updateItemText} />
+        ))}
+      </View>
+      {items.length === 0 && (
+        <View style={styles.addStickyMsgWrapper}>
+          <Text style={styles.addStickyMsg}>
+            Double tap to add a sticky note
+          </Text>
         </View>
-      </Tapable>
-    )
-  }
-}
+      )}
+      {selectedItemId && (
+        <ActionsMenu
+          onEdit={() => editItem(selectedItemId)}
+          onDuplicate={() => duplicateItem(selectedItemId)}
+          onRemove={() => removeItem(selectedItemId)} />
+      )}
+    </View>
+  </Tapable>
+)
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -93,5 +86,16 @@ export default connect((state) => ({
   items: getItems(state),
   selectedItemId: getSelectedItemId(state)
 }), (dispatch) => ({
-  ...bindActionCreators(actionCreators, dispatch)
+  ...bindActionCreators(actionCreators, dispatch),
+  addItemOnPosition: (evt) => {
+    const { width, height } = Dimensions.get('window')
+
+    const x = evt.pageX - (width / 2)
+    const y = evt.pageY - (height / 2)
+
+    dispatch(actionCreators.addItem({
+      position: [x, y],
+      kind: 'sticky'
+    }))
+  }
 }))(Mural)

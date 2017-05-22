@@ -9,6 +9,29 @@ export default class Sticky extends PureComponent {
   static fontSize = 20
   static lineHeight = 23
 
+  state = this.getStateFromProps(this.props)
+
+  componentWillReceiveProps (props) {
+    this.setState(this.getStateFromProps(props))
+  }
+
+  getStateFromProps (props) {
+    return {
+      wrapperStyle: [
+        styles.wrapper,
+        {
+          left: props.position[0] - Sticky.width / 2,
+          top: props.position[1] - Sticky.height / 2
+        },
+        props.selected && styles.wrapperSelected
+      ],
+      containerStyle: [
+        styles.container,
+        props.selected && styles.containerSelected
+      ]
+    }
+  }
+
   handleDoubleTap = (evt) => {
     const { id, editing, onEdit } = this.props
 
@@ -41,24 +64,14 @@ export default class Sticky extends PureComponent {
   render () {
     const {
       text,
-      position,
       selected,
       editing
     } = this.props
 
-    const wrapperStyle = [
-      styles.wrapper,
-      {
-        left: position[0] - Sticky.width / 2,
-        top: position[1] - Sticky.height / 2
-      },
-      selected && styles.wrapperSelected
-    ]
-
-    const containerStyle = [
-      styles.container,
-      selected && styles.containerSelected
-    ]
+    const {
+      wrapperStyle,
+      containerStyle
+    } = this.state
 
     return (
       <Tapable
