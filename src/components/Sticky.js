@@ -117,10 +117,15 @@ const StickyTextInput = ({
         // multiline TextInput with autogrow sucks.
         // This estimates the number of lines needed by the amount of content
         // TODO: reasearch native solution, or a hack like render a hidden Text
-        height: (Math.ceil(value.length / 9) || 1) * Sticky.lineHeight
+        height: StickyTextInput.getHeight(value)
       }
     ]} />
 )
+
+StickyTextInput.getHeight = (value) => {
+  const lines = Math.ceil(value.length / 9) || 1
+  return (lines > 9 ? 9 : lines) * Sticky.lineHeight
+}
 
 const styles = StyleSheet.create({
   wrapper: {
