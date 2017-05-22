@@ -13,11 +13,6 @@ export const getItem = (state, id) => state.items.find((item) => item.id === id)
 
 export const getItems = (state) => state.items.slice()
 
-export const getNewerItem = (state) => {
-  if (state.items.length === 0) return null
-  return state.items[state.items.length - 1]
-}
-
 export const getSelectedItemId = (state) => {
   const item = state.items.find((item) => item.selected)
   if (!item) return null
