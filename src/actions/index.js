@@ -45,3 +45,8 @@ export const updateItemText = (id, text) => ({
   id,
   text
 })
+
+export const duplicateItem = (id) => ({
+  type: 'DUPLICATE_ITEM',
+  id
+})

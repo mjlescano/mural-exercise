@@ -6,7 +6,7 @@ This doc is where I'm going to be annotating all the major decisions I make. It'
 
 Decided to go with [React Native](https://facebook.github.io/react-native/) and [Redux](http://redux.js.org/). This repo is already initialized using [Create React Native App](https://github.com/react-community/create-react-native-app) so I don't have to preoccupy about bundling, etc, for now.
 
-Defined an MVP following the instructions at the [exercise](docs/MURALFrontEndDeveloper.pdf). These are the features I want to implement, adapted for mobile, and without the copy and paste part:
+Defined an MVP following the instructions at the [exercise](docs/MURALFrontEndDeveloper.pdf). These are the features I want to implement, adapted for mobile, and without the copy and paste in favor of duplication:
 
 - [ ] Double tap background to add sticky note on tap position
 - [ ] A sticky note should have editable text
@@ -15,6 +15,7 @@ Defined an MVP following the instructions at the [exercise](docs/MURALFrontEndDe
 - [ ] When a sticky note is selected, the user should be able to:
   - [ ] delete it
   - [ ] edit it
+- [ ] A sticky note should be duplicable
 
 The Redux state should look something like:
 

@@ -47,7 +47,26 @@ const reducers = {
   UPDATE_ITEM_TEXT: (state, { id, text }) => state.map((item) => {
     if (item.id === id) return { ...item, text }
     return item
-  })
+  }),
+
+  DUPLICATE_ITEM: (state, { id }) => {
+    let original
+
+    const items = state.map((item) => {
+      if (item.id !== id) return item
+      original = item
+      return { ...original, selected: false, editing: false }
+    })
+
+    items.push({
+      ...original,
+      position: original.position.map((pos) => pos - 30),
+      selected: true,
+      editing: true
+    })
+
+    return items
+  }
 }
 
 export default (state = initialState, action) => {
