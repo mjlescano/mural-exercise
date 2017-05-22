@@ -1,11 +1,19 @@
-export const addItem = (data) => ({
-  type: 'ADD_ITEM',
-  payload: data
-})
+import { getNewerItem } from '../reducers'
 
-export const removeItems = (ids) => ({
-  type: 'REMOVE_ITEMS',
-  ids
+export const addItem = (data) => (dispatch, getState) => {
+  dispatch({
+    type: 'ADD_ITEM',
+    payload: data
+  })
+
+  const { id } = getNewerItem(getState())
+
+  dispatch(editItem(id))
+}
+
+export const removeItem = (id) => ({
+  type: 'REMOVE_ITEM',
+  id
 })
 
 export const editItem = (id) => ({
@@ -26,6 +34,10 @@ export const selectItem = (id) => ({
 export const unselectItem = (id) => ({
   type: 'UNSELECT_ITEM',
   id
+})
+
+export const unselectAllItems = () => ({
+  type: 'UNSELECT_ALL_ITEMS'
 })
 
 export const updateItemText = (id, text) => ({

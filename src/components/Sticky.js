@@ -1,10 +1,21 @@
 import React, { PureComponent } from 'react'
-import { Image, StyleSheet, Text } from 'react-native'
+import { Image, StyleSheet, Text, TextInput } from 'react-native'
 import Tapable from 'react-native-tapable'
 
 export default class Sticky extends PureComponent {
   static width = 180
   static height = 180
+  static padding = 10
+  static fontSize = 20
+  static lineHeight = 23
+
+  handleDoubleTap = (evt) => {
+    const { id, editing, onEdit } = this.props
+
+    if (editing) return null
+
+    onEdit(id)
+  }
 
   handleTap = (evt) => {
     const {
@@ -17,11 +28,22 @@ export default class Sticky extends PureComponent {
     selected ? onUnselect(id) : onSelect(id)
   }
 
+  handleTextChange = (text) => {
+    const { id, onUpdateText } = this.props
+    onUpdateText(id, text)
+  }
+
+  handleTextBlur = () => {
+    const { id, onUnselect } = this.props
+    onUnselect(id)
+  }
+
   render () {
     const {
       text,
       position,
-      selected
+      selected,
+      editing
     } = this.props
 
     const wrapperStyle = [
@@ -42,16 +64,50 @@ export default class Sticky extends PureComponent {
       <Tapable
         accessibilityTraits={selected && 'selected'}
         onTap={this.handleTap}
+        onDoubleTap={this.handleDoubleTap}
         style={wrapperStyle}>
         <Image
           style={containerStyle}
           source={require('../assets/sticky.png')}>
-          <Text style={styles.text}>{text}</Text>
+          {editing && (
+            <StickyTextInput
+              value={text}
+              onBlur={this.handleTextBlur}
+              onChange={this.handleTextChange} />
+          )}
+          {!editing && (
+            <Text style={styles.text}>{text}</Text>
+          )}
         </Image>
       </Tapable>
     )
   }
 }
+
+const StickyTextInput = ({
+  value,
+  onBlur,
+  onChange
+}) => (
+  <TextInput
+    defaultValue={value}
+    onBlur={onBlur}
+    onChangeText={onChange}
+    returnKeyType='done'
+    multiline
+    autoFocus
+    selectTextOnFocus
+    blurOnSubmit
+    style={[
+      styles.text,
+      {
+        // multiline TextInput with autogrow sucks.
+        // This estimates the number of lines needed by the amount of content
+        // TODO: reasearch native solution, or a hack like render a hidden Text
+        height: (Math.ceil(value.length / 9) || 1) * Sticky.lineHeight
+      }
+    ]} />
+)
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -70,6 +126,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: Sticky.width,
     height: Sticky.height,
+    padding: 10,
     resizeMode: 'cover',
     overflow: 'visible',
     shadowOpacity: 0.18,
@@ -82,7 +139,12 @@ const styles = StyleSheet.create({
     shadowOffset: { height: 4 }
   },
   text: {
-    fontSize: 20,
+    width: Sticky.width - Sticky.padding * 2,
+    maxHeight: Sticky.height - Sticky.padding * 2,
+    minHeight: Sticky.lineHeight,
+    lineHeight: Sticky.lineHeight,
+    overflow: 'hidden',
+    fontSize: Sticky.fontSize,
     color: '#3E454D',
     textAlign: 'center',
     backgroundColor: 'transparent'

@@ -2,12 +2,24 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { View, StyleSheet, StatusBar, Text, Dimensions } from 'react-native'
 import Tapable from 'react-native-tapable'
-import { addItem, removeItems, selectItem, unselectItem } from '../actions'
-import { getItems, getSelectedItemsIds } from '../reducers'
+import {
+  addItem,
+  editItem,
+  removeItem,
+  selectItem,
+  unselectItem,
+  updateItemText,
+  unselectAllItems
+} from '../actions'
+import { getItems, getSelectedItemId } from '../reducers'
 import Sticky from '../components/Sticky'
 import ActionsMenu from '../components/ActionsMenu'
 
 export class Mural extends PureComponent {
+  handleTap = (evt) => {
+    this.props.dispatch(unselectAllItems())
+  }
+
   handleDoubleTap = (evt) => {
     const { width, height } = Dimensions.get('window')
 
@@ -20,23 +32,34 @@ export class Mural extends PureComponent {
     }))
   }
 
-  handleStickySelect = (id) => {
+  handleSelectItem = (id) => {
     this.props.dispatch(selectItem(id))
   }
 
-  handleStickyUnselect = (id) => {
+  handleUnselectItem = (id) => {
     this.props.dispatch(unselectItem(id))
   }
 
-  handleRemoveItems = () => {
-    this.props.dispatch(removeItems(this.props.selectedItemsIds))
+  handleUpdateItemText = (id, text) => {
+    this.props.dispatch(updateItemText(id, text))
+  }
+
+  handleEditItem = (id) => {
+    this.props.dispatch(editItem(id))
+  }
+
+  handleRemoveItem = (id) => {
+    this.props.dispatch(removeItem(id))
   }
 
   render () {
-    const { items, selectedItemsIds } = this.props
+    const { items, selectedItemId } = this.props
 
     return (
-      <Tapable onDoubleTap={this.handleDoubleTap} style={styles.wrapper}>
+      <Tapable
+        onTap={this.handleTap}
+        onDoubleTap={this.handleDoubleTap}
+        style={styles.wrapper}>
         <View style={styles.container}>
           <StatusBar barStyle='dark-content' />
           <View style={styles.itemsWrapper}>
@@ -44,8 +67,10 @@ export class Mural extends PureComponent {
               <Sticky
                 key={sticky.id}
                 {...sticky}
-                onSelect={this.handleStickySelect}
-                onUnselect={this.handleStickyUnselect} />
+                onSelect={this.handleSelectItem}
+                onEdit={this.handleEditItem}
+                onUnselect={this.handleUnselectItem}
+                onUpdateText={this.handleUpdateItemText} />
             ))}
           </View>
           {items.length === 0 && (
@@ -55,8 +80,10 @@ export class Mural extends PureComponent {
               </Text>
             </View>
           )}
-          {selectedItemsIds.length > 0 && (
-            <ActionsMenu onRemove={this.handleRemoveItems} />
+          {selectedItemId && (
+            <ActionsMenu
+              onEdit={() => this.handleEditItem(selectedItemId)}
+              onRemove={() => this.handleRemoveItem(selectedItemId)} />
           )}
         </View>
       </Tapable>
@@ -94,5 +121,5 @@ const styles = StyleSheet.create({
 
 export default connect((state) => ({
   items: getItems(state),
-  selectedItemsIds: getSelectedItemsIds(state)
+  selectedItemId: getSelectedItemId(state)
 }))(Mural)

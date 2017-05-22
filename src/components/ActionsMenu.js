@@ -8,18 +8,37 @@ import {
 } from 'react-native'
 
 export default ({
+  onEdit,
   onRemove
 }) => (
   <View
     style={[styles.container, { width: Dimensions.get('window').width }]}>
+    {onEdit && (
+      <ActionButton
+        onPress={onEdit}
+        accessibilityLabel='Edit selected items'
+        icon={require('../assets/edit.png')} />
+    )}
     {onRemove && (
-      <TouchableHighlight
+      <ActionButton
         onPress={onRemove}
-        accessibilityLabel='Delete selected items'>
-        <Image source={require('../assets/remove.png')} style={styles.icon} />
-      </TouchableHighlight>
+        accessibilityLabel='Delete selected items'
+        icon={require('../assets/remove.png')} />
     )}
   </View>
+)
+
+const ActionButton = ({
+  onPress,
+  accessibilityLabel,
+  icon
+}) => (
+  <TouchableHighlight
+    onPress={onPress}
+    style={styles.button}
+    accessibilityLabel={accessibilityLabel}>
+    <Image source={icon} style={styles.icon} />
+  </TouchableHighlight>
 )
 
 const styles = StyleSheet.create({
@@ -28,12 +47,17 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 8,
     borderColor: '#bbb',
     borderTopWidth: 1,
     backgroundColor: '#F4F4F4'
+  },
+  button: {
+    marginLeft: 5,
+    marginRight: 5
   },
   icon: {
     width: 30,

@@ -9,8 +9,17 @@ export default combineReducers({
 // there's no need to use something like https://github.com/reactjs/reselect
 // for now...
 
+export const getItem = (state, id) => state.items.find((item) => item.id === id)
+
 export const getItems = (state) => state.items.slice()
 
-export const getSelectedItemsIds = (state) => (
-  state.items.filter((item) => item.selected).map((item) => item.id)
-)
+export const getNewerItem = (state) => {
+  if (state.items.length === 0) return null
+  return state.items[state.items.length - 1]
+}
+
+export const getSelectedItemId = (state) => {
+  const item = state.items.find((item) => item.selected)
+  if (!item) return null
+  return item.id
+}

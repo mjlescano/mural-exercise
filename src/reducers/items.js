@@ -15,30 +15,33 @@ const reducers = {
     }
   ]),
 
-  REMOVE_ITEMS: (state, { ids }) => (
-    state.filter((item) => !ids.includes(item.id))
-  ),
+  REMOVE_ITEM: (state, { id }) => state.filter((item) => id !== item.id),
 
   EDIT_ITEM: (state, { id }) => state.map((item) => {
-    if (item.id === id) return { ...item, editing: true }
-    if (!item.editing) return item
-    return { ...item, editing: false }
+    if (item.id === id) return { ...item, editing: true, selected: true }
+    if (!item.editing && !item.selected) return item
+    return { ...item, editing: false, selected: false }
   }),
 
   UNEDIT_ITEM: (state, { id }) => state.map((item) => {
-    if (item.id === id) return { ...item, selected: false }
+    if (item.id === id) return { ...item, editing: false }
     return item
   }),
 
   SELECT_ITEM: (state, { id }) => state.map((item) => {
     if (item.id === id) return { ...item, selected: true }
-    if (!item.selected) return item
-    return { ...item, selected: false }
+    if (!item.editing && !item.selected) return item
+    return { ...item, selected: false, editing: false }
   }),
 
   UNSELECT_ITEM: (state, { id }) => state.map((item) => {
-    if (item.id === id) return { ...item, selected: false }
+    if (item.id === id) return { ...item, selected: false, editing: false }
     return item
+  }),
+
+  UNSELECT_ALL_ITEMS: (state) => state.map((item) => {
+    if (!item.editing && !item.selected) return item
+    return { ...item, selected: false, editing: false }
   }),
 
   UPDATE_ITEM_TEXT: (state, { id, text }) => state.map((item) => {
