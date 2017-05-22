@@ -22,6 +22,8 @@ Runs the app in development mode and you will be able to open it in the [Expo ap
 
 Like `npm start`, but also attempts to open your app in the iOS Simulator if you're on a Mac and have it installed.
 
+> For the emulator, I recommend using the iPad 2 as hardware, because of the lack of zoom-in/out
+
 #### `npm run android`
 
 Like `npm start`, but also attempts to open your app on a connected Android device or emulator. Requires an installation of Android build tools (see [React Native docs](https://facebook.github.io/react-native/docs/getting-started.html) for detailed setup).
@@ -38,9 +40,9 @@ Like `npm start`, but also attempts to open your app on a connected Android devi
   * [`eslint-config-democracyos`](https://github.com/DemocracyOS/eslint-config-democracyos) to add [Standard](https://standardjs.com/rules) and some other niceities.
   * [`eslint-plugin-react-native`](https://github.com/Intellicode/eslint-plugin-react-native) for React Native specific rules.
 
-## Features Implemented
+## Features
 
-TBD
+* Add/Edit/Remove/Duplicate Sticky
 
 ## Tests
 
