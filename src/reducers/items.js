@@ -15,26 +15,28 @@ const reducers = {
     }
   ]),
 
-  REMOVE_ITEM: (state, { id }) => state.filter((item) => id !== item.id),
+  REMOVE_ITEM: (state, { payload: { id } }) => (
+    state.filter((item) => id !== item.id)
+  ),
 
-  EDIT_ITEM: (state, { id }) => state.map((item) => {
+  EDIT_ITEM: (state, { payload: { id } }) => state.map((item) => {
     if (item.id === id) return { ...item, editing: true, selected: true }
     if (!item.editing && !item.selected) return item
     return { ...item, editing: false, selected: false }
   }),
 
-  UNEDIT_ITEM: (state, { id }) => state.map((item) => {
+  UNEDIT_ITEM: (state, { payload: { id } }) => state.map((item) => {
     if (item.id === id) return { ...item, editing: false }
     return item
   }),
 
-  SELECT_ITEM: (state, { id }) => state.map((item) => {
+  SELECT_ITEM: (state, { payload: { id } }) => state.map((item) => {
     if (item.id === id) return { ...item, selected: true }
     if (!item.editing && !item.selected) return item
     return { ...item, selected: false, editing: false }
   }),
 
-  UNSELECT_ITEM: (state, { id }) => state.map((item) => {
+  UNSELECT_ITEM: (state, { payload: { id } }) => state.map((item) => {
     if (item.id === id) return { ...item, selected: false, editing: false }
     return item
   }),
@@ -44,12 +46,12 @@ const reducers = {
     return { ...item, selected: false, editing: false }
   }),
 
-  UPDATE_ITEM_TEXT: (state, { id, text }) => state.map((item) => {
+  UPDATE_ITEM_TEXT: (state, { payload: { id, text } }) => state.map((item) => {
     if (item.id === id) return { ...item, text }
     return item
   }),
 
-  DUPLICATE_ITEM: (state, { id }) => {
+  DUPLICATE_ITEM: (state, { payload: { id } }) => {
     let original
 
     const items = state.map((item) => {

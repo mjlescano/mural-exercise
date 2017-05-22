@@ -13,27 +13,27 @@ export const addItem = (data) => (dispatch, getState) => {
 
 export const removeItem = (id) => ({
   type: 'REMOVE_ITEM',
-  id
+  payload: { id }
 })
 
 export const editItem = (id) => ({
   type: 'EDIT_ITEM',
-  id
+  payload: { id }
 })
 
 export const uneditItem = (id) => ({
   type: 'UNEDIT_ITEM',
-  id
+  payload: { id }
 })
 
 export const selectItem = (id) => ({
   type: 'SELECT_ITEM',
-  id
+  payload: { id }
 })
 
 export const unselectItem = (id) => ({
   type: 'UNSELECT_ITEM',
-  id
+  payload: { id }
 })
 
 export const unselectAllItems = () => ({
@@ -42,11 +42,10 @@ export const unselectAllItems = () => ({
 
 export const updateItemText = (id, text) => ({
   type: 'UPDATE_ITEM_TEXT',
-  id,
-  text
+  payload: { id, text }
 })
 
 export const duplicateItem = (id) => ({
   type: 'DUPLICATE_ITEM',
-  id
+  payload: { id }
 })
