@@ -1,60 +1,24 @@
 import React, { PureComponent } from 'react'
+import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { View, StyleSheet, StatusBar, Text, Dimensions } from 'react-native'
 import Tapable from 'react-native-tapable'
-import {
-  addItem,
-  editItem,
-  removeItem,
-  selectItem,
-  unselectItem,
-  updateItemText,
-  unselectAllItems,
-  duplicateItem
-} from '../actions'
+import * as actionCreators from '../actions'
 import { getItems, getSelectedItemId } from '../reducers'
 import Sticky from '../components/Sticky'
 import ActionsMenu from '../components/ActionsMenu'
 
 export class Mural extends PureComponent {
-  handleTap = (evt) => {
-    this.props.dispatch(unselectAllItems())
-  }
-
   handleDoubleTap = (evt) => {
     const { width, height } = Dimensions.get('window')
 
     const x = evt.pageX - (width / 2)
     const y = evt.pageY - (height / 2)
 
-    this.props.dispatch(addItem({
+    this.props.addItem({
       position: [x, y],
       kind: 'sticky'
-    }))
-  }
-
-  handleSelectItem = (id) => {
-    this.props.dispatch(selectItem(id))
-  }
-
-  handleUnselectItem = (id) => {
-    this.props.dispatch(unselectItem(id))
-  }
-
-  handleUpdateItemText = (id, text) => {
-    this.props.dispatch(updateItemText(id, text))
-  }
-
-  handleEditItem = (id) => {
-    this.props.dispatch(editItem(id))
-  }
-
-  handleRemoveItem = (id) => {
-    this.props.dispatch(removeItem(id))
-  }
-
-  handleDuplicateItem = (id) => {
-    this.props.dispatch(duplicateItem(id))
+    })
   }
 
   render () {
@@ -62,7 +26,7 @@ export class Mural extends PureComponent {
 
     return (
       <Tapable
-        onTap={this.handleTap}
+        onTap={this.props.unselectAllItems}
         onDoubleTap={this.handleDoubleTap}
         style={styles.wrapper}>
         <View style={styles.container}>
@@ -72,10 +36,10 @@ export class Mural extends PureComponent {
               <Sticky
                 key={sticky.id}
                 {...sticky}
-                onSelect={this.handleSelectItem}
-                onEdit={this.handleEditItem}
-                onUnselect={this.handleUnselectItem}
-                onUpdateText={this.handleUpdateItemText} />
+                onSelect={this.props.selectItem}
+                onEdit={this.props.editItem}
+                onUnselect={this.props.unselectItem}
+                onUpdateText={this.props.updateItemText} />
             ))}
           </View>
           {items.length === 0 && (
@@ -87,9 +51,9 @@ export class Mural extends PureComponent {
           )}
           {selectedItemId && (
             <ActionsMenu
-              onEdit={() => this.handleEditItem(selectedItemId)}
-              onDuplicate={() => this.handleDuplicateItem(selectedItemId)}
-              onRemove={() => this.handleRemoveItem(selectedItemId)} />
+              onEdit={() => this.props.editItem(selectedItemId)}
+              onDuplicate={() => this.props.duplicateItem(selectedItemId)}
+              onRemove={() => this.props.removeItem(selectedItemId)} />
           )}
         </View>
       </Tapable>
@@ -128,4 +92,6 @@ const styles = StyleSheet.create({
 export default connect((state) => ({
   items: getItems(state),
   selectedItemId: getSelectedItemId(state)
+}), (dispatch) => ({
+  ...bindActionCreators(actionCreators, dispatch)
 }))(Mural)
